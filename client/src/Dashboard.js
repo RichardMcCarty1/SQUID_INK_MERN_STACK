@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import { withRouter } from 'react-router-dom';
-import { BrowserRouter as Router, Route} from 'react-router-dom'
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../src/authActions";
-//import LinkButton from "./src/actions/authActions";
+import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+
 
 class Dashboard extends Component {
   onLogoutClick = e => {
@@ -21,32 +21,36 @@ class Dashboard extends Component {
     const { user } = this.props.auth;
 
     return (
-      <div style={{ height: "75vh" }} className="container valign-wrapper">
-        <div className="row">
+      <div>
+        <div style={{
+          margin: "0",
+          position: "absolute",
+          top: "45%",
+          left: "50%",
+          transform: "translate(-50%, -50%)"
+        }}>
+          <Grid container
+                justify="center"
+                spacing={6}
+          >
           <div className="landing-copy col s12 center-align">
-            
-            <h3>
+            <Grid item xs={12}>
+            <h2>
               <b>Hello,</b> {user.name.split(" ")[0]} <b>.</b>
               <p className="flow-text grey-text text-darken-1">
                 You are logged into SQUID INK.
               </p>
-            </h3>
-
-  
-
-            <button
-              style={{
-                width: "150px",
-                borderRadius: "3px",
-                letterSpacing: "1.5px",
-                marginTop: "1rem"
-              }}
+            </h2>
+          </Grid>
+            <Grid item xs={12} style={{margin: "30px"}}>
+            <Button variant="outlined" color="gray" size="large"
               onClick={this.onLogoutClick}
-              className="btn btn-large waves-effect waves-light hoverable blue accent-3"
             >
               Logout
-            </button>
+            </Button>
+            </Grid>
           </div>
+          </Grid>
         </div>
       </div>
     );

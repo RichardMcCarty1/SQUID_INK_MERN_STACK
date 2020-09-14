@@ -1,22 +1,33 @@
 // @flow
-
 import React, { Component, Fragment } from "react";
 import { bindActionCreators } from "../node_modules/redux";
 import axios from "../node_modules/axios";
 //import style from './squid.scss'
+import Button from "@material-ui/core/Button";
+import FormControl from '@material-ui/core/FormControl';
+import { FormHelperText } from '@material-ui/core';
+import Input from '@material-ui/core/Input';
+import InputLabel from '@material-ui/core/InputLabel';
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import Radio from "@material-ui/core/Radio";
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormLabel from '@material-ui/core/FormLabel';
+import RadioGroup from "@material-ui/core/RadioGroup";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
   Link
 } from "react-router-dom";
+import classnames from "classnames";
 
 const endpoint = "https://cirdles.cs.cofc.edu/Services/squidReporting";
 //const FileDownload = require("downloadjs");
 // checkout https://www.npmjs.com/package/rn-fetch-blob for soultion involving progress etc
 
 class SquidPage extends Component {
-/*   constructor(props) {
+ constructor(props) {
     super(props);
     this.handleselectedPrawnFile = this.handleselectedPrawnFile.bind(this);
     this.handleselectedTaskFile = this.handleselectedTaskFile.bind(this);
@@ -32,8 +43,7 @@ class SquidPage extends Component {
     this.handlePreferredIndexIsotopeChange = this.handlePreferredIndexIsotopeChange.bind(
       this
     );
- */
-  /*   this.state = {
+ this.state = {
       selectedPrawnFile: null,
       selectedTaskFile: null,
       refMatFilter: "",
@@ -105,282 +115,174 @@ class SquidPage extends Component {
       this.state.selectedPrawnFile != null &&
       this.state.selectedTaskFile != null
     ) {
-      data.append("prawnFile", this.state.selectedPrawnFile);
-      data.append("taskFile", this.state.selectedTaskFile);
-      data.append("useSBM", this.state.normalizeSBM);
-      data.append("userLinFits", this.state.ratioCalculationMethod);
-      data.append("refMatFilter", this.state.refMatFilter);
-      data.append("concRefMatFilter", this.state.concRefMatFilter);
-      data.append("prefIndexIso", this.state.preferredIndexIsotope);
+        data.append("prawnFile", this.state.selectedPrawnFile);
+        data.append("taskFile", this.state.selectedTaskFile);
+        data.append("useSBM", this.state.normalizeSBM);
+        data.append("userLinFits", this.state.ratioCalculationMethod);
+        data.append("refMatFilter", this.state.refMatFilter);
+        data.append("concRefMatFilter", this.state.concRefMatFilter);
+        data.append("prefIndexIso", this.state.preferredIndexIsotope);
 
-      axios
-        .post(endpoint, data, {
-          responseType: "blob",
-          onUploadProgress: ProgressEvent => {
-            this.setState({
-              loaded: (ProgressEvent.loaded / ProgressEvent.total) * 100
-            });
-          }
-        })
-        .then(response => {
-          FileDownload(response.data, "squid-reports.zip", "application/zip"),
-            {
-              onDownloadProgress: ProgressEvent => {
-                this.setState({
-                  loaded: (ProgressEvent.loaded / ProgressEvent.total) * 100
-                });
-              }
-            },
-            this.setState({ loaded: 0 });
-        });
     }
   }
- */
   render() {
     return (
+
       <Fragment>
+          <div style={{
+              margin: "0",
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -70%)"
+          }}>
+              <Grid container
+                    justify="center"
+                    spacing={12}
+              >
+      <Box   borderColor="#3F51B5" border={2} justifyContent="center" display="flex" p={1} bgcolor="#e3e5e8" >
         <div className="squid container my-3 p-3 d-flex flex-column justify-content-center border border-squid rounded">
           <div className="row m-3">
             <div className="col">
               <label className="my-auto">Zipped Prawn XML file:</label>
               <div className="custom-file">
-                <input
-                  className="custom-file-input my-auto"
-                  type="file"
-                  name="prawnFile"
-                  id="prawnFileInput"
-                  onChange={this.handleselectedPrawnFile}
-                />
+                  <Grid item xs={12}>
+                <Button
+                    variant="contained"
+                    component="label"
+                >
+                    <pre style={{fontFamily: "helvetica"}}>Upload File: </pre>
+                  <Input hidden
+                      type="file"
+                      name="prawnFile"
+                      id="prawnFileInput"
+                      style={{display: 'none'}}
+                      onChange={this.handleselectedPrawnFile}
+                  /><label htmlFor="prawnFileInput">
+                 {this.state.selectedPrawnFile &&
+                    this.state.selectedPrawnFile.name}
+                </label>
+                </Button>
+                  </Grid>
 
-
-          
-
-                
-              </div>
-            </div>
-            <div className="col">
+            <div className="col" style={{marginTop: "20px"}}>
               <label className="my-auto">Squid2.* Task XLS file:</label>
               <div className="custom-file">
+                  <Grid item xs={12}>
+                  <Button
+                      variant="contained"
+                      component="label"
+                  >
+                      <pre style={{fontFamily: "helvetica"}}>Upload File: </pre>
                 <input
-                  className="custom-file-input my-auto"
                   type="file"
                   name="taskFile"
                   id="taskFileInput"
+                  style={{display: 'none'}}
                   onChange={this.handleselectedTaskFile}
-                />
-{/*                 <label htmlFor="taskFileInput" className="custom-file-label">
-                 {(this.state.selectedTaskFile &&
-                   // shortenFileName(this.state.selectedTaskFile.name)) ||
-                   // "Choose File"}
-                </label> */}
+                /><label htmlFor="prawnFileInput">
+                      {this.state.selectedTaskFile &&
+                      this.state.selectedTaskFile.name}
+                  </label>
+                  </Button>
+                  </Grid>
               </div>
             </div>
           </div>
-
-          <div className="row m-3">
-            <label
-              htmlFor="refMatFilterInput"
-              className="col my-auto text-right"
-            >
-              Reference Material Sample Name Filter:
-            </label>
-            <input
-              className="form-control col my-auto"
-              type="text"
-              name="refMatFilter"
-              id="refMatFilterInput"
-             // value={this.state.refMatFilter}
-              onChange={this.handleRefMatFilterChange}
-            />
           </div>
-
-          <div className="row m-3">
-            <label
-              htmlFor="concRefMatFilterInput"
-              className="col my-auto text-right"
-            >
-              Concentration Reference Material Sample Name Filter:
-            </label>
-            <input
-              className="form-control col my-auto"
-              type="text"
-              name="concRefMatFilter"
-              id="concRefMatFilterInput"
-             // value={this.state.concRefMatFilter}
-              onChange={this.handleConcRefMatFilterChange}
-            />
           </div>
+        <Grid item xs={12}>
+            <FormControl style={{marginTop: "20px"}}>
+                <InputLabel htmlFor="component-simple">Reference Material Sample Name Filter:</InputLabel>
+                <Input style={{width: "500px"}}
+                       id="refMatFilterInput"
+                       name="refMatFilter"
+                       onChange={this.handleRefMatFilterChange}
+                       type="text" />
+            </FormControl>
+        </Grid>
+        <Grid item xs={12}>
+            <FormControl style={{marginTop: "20px"}}>
+                <InputLabel htmlFor="component-simple">Concentration Reference Material Sample Name Filter:</InputLabel>
+                <Input style={{width: "500px"}}
+                       id="concRefMatFilterInput"
+                       name="confcRefMatFilter"
+                       onChange={this.handleRefMatFilterChange}
+                       type="text"
+                       />
+            </FormControl>
+        </Grid>
 
-          <div className="row m-3">
-            <label className="col my-auto text-right">
-              Normalize Ion Counts for SBM?
-            </label>
-            <div className="col">
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="normalizeSBM"
-                  id="normalizeSBMYes"
-                 // checked={this.state.normalizeSBM}
-                  onChange={this.handleNormalizeSBMChange}
-                  onChange={console.log('filter added')}
-              
-                />
-                <label className="form-check-label" htmlFor="normalizeSBMYes">
-                  Yes
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="normalizeSBM"
-                  id="normalizeSBMNo"
-                 // checked={this.state.normalizeSBM}
-                  onChange={this.handleNormalizeSBMChange}
-                />
-                <label className="form-check-label" htmlFor="normalizeSBMNo">
-                  No
-                </label>
-              </div>
-            </div>
+        <Grid item xs={12}>
+          <div className="row m-3" style={{marginTop: "20px"}}>
+              <FormControl component="fieldset">
+                  <FormLabel component="legend">Normalize Ion Counts for SBM?</FormLabel>
+                  <RadioGroup aria-label="NormalizeSBM" name="normalizeSBM" onChange={this.handleNormalizeSBMChange}
+                              style={{display: "inline-block"}}>
+                      <FormControlLabel id="normalizeSBMYes" value="normalizeSBMYes" control={<Radio />} label="Yes" />
+                      <FormControlLabel id="normalizeSBMNo" value="normalizeSBMNo" control={<Radio />} label="No" />
+                  </RadioGroup>
+              </FormControl>
           </div>
+        </Grid>
 
-          <div className="row m-3">
-            <label className="col my-auto text-right">
-              Ratio Calculation Method:
-            </label>
-            <div className="col">
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="ratioCalcMethod"
-                  id="ratioCalcMethodRegression"
-                  //checked={this.state.ratioCalculationMethod}
-                  onChange={this.handleRatioCalculationMethodChange}
-                />
-                <label
-                  className="form-check-label"
-                  htmlFor="ratioCalcMethodRegression"
-                >
-                  Linear regression to burn mid-time
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  name="ratioCalcMethod"
-                  id="ratioCalcMethodAverage"
-                 // checked={!this.state.ratioCalculationMethod}
-                  onChange={this.handleRatioCalculationMethodChange}
-                />
-                <label className="form-check-label" htmlFor="normalizeSBMNo">
-                  Spot average (time-invariant)
-                </label>
-              </div>
-            </div>
-          </div>
+            <Grid item xs={12}>
+                <div className="row m-3" style={{marginTop: "20px"}}>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">Ratio Calculation Method:</FormLabel>
+                        <RadioGroup aria-label="RatioCalcMethod" name="ratioCalcMethod" onChange={this.handleRatioCalculationMethodChange}
+                                    style={{display: "inline-block"}}>
+                            <FormControlLabel id="ratioCalcMethodRegression" value="ratioCalcMethodRegression"
+                                              control={<Radio />} label="Linear regression to burn mid-time" />
+                            <FormControlLabel id="ratioCalcMethodAverage" value="ratioCalcMethodAverage"
+                                              control={<Radio />} label="Spot average (time-invariant)" />
+                        </RadioGroup>
+                    </FormControl>
+                </div>
+            </Grid>
+            <Grid item xs={12}>
+                <div className="row m-3" style={{marginTop: "20px"}}>
+                    <FormControl component="fieldset">
+                        <FormLabel component="legend">Preferred Index Isotope:</FormLabel>
+                        <RadioGroup aria-label="IndexIsotope" name="indexIsotope" onChange={this.handlePreferredIndexIsotopeChange}
+                                    style={{display: "inline-block"}}>
+                            <FormControlLabel id="indexIsotope204" value="PB_204"
+                                              control={<Radio />} label="204Pb" />
+                            <FormControlLabel id="indexIsotope207" value="PB_207"
+                                              control={<Radio />} label="207Pb" />
+                            <FormControlLabel id="indexIsotope208" value="PB_208"
+                                              control={<Radio />} label="208Pb" />
+                        </RadioGroup>
+                    </FormControl>
+                </div>
+            </Grid>
 
-          <div className="row m-3">
-            <label className="col my-auto text-right">
-              Preferred Index Isotope:
-            </label>
-            <div className="col">
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  value="PB_204"
-                  name="indexIsotope"
-                  id="indexIsotope204"
-                 // checked={this.state.preferredIndexIsotope === "PB_204"}
-                  onChange={this.handlePreferredIndexIsotopeChange}
-                />
-                <label htmlFor="indexIsotope204" className="form-check-label">
-                  204Pb
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                  value="PB_207"
-                  name="indexIsotope"
-                  id="indexIsotope207"
-                 // checked={this.state.preferredIndexIsotope === "PB_207"}
-                  onChange={this.handlePreferredIndexIsotopeChange}
-                />
-                <label htmlFor="indexIsotope207" className="form-check-label">
-                  207Pb
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  className="form-check-input"
-                  type="radio"
-                 // value="PB_208"
-                  name="indexIsotope"
-                  id="indexIsotope208"
-                 // checked={this.state.preferredIndexIsotope === "PB_208"}
-                  onChange={this.handlePreferredIndexIsotopeChange}
-                  
-                />
-                <label htmlFor="indexIsotope204" className="form-check-label">
-                  208Pb
-                </label>
-              </div>
-            </div>
-          </div>
 
-          <div className="row justify-content-center text-center text-danger m-2">
-            Note: parameter models are currently GA defaults (see Squid app).
-          </div>
-          <div className="row justify-content-center m-2">
-            <button
-              className="btn btn-outline-squid rounded-pill"
+
+          <div className="row justify-content-center m-2" style={{marginTop: "20px"}}>
+            <Button variant="outlined" color="primary" size="large"
               onClick={this.handleUpload}
             >
               Click here to Upload data for processing ... wait for returned
               results
-            </button>
+            </Button>
           </div>
+            <div className="row justify-content-center text-center text-danger m-2" style={{marginTop: "5px"}}>
+                Note: parameter models are currently GA defaults (see Squid app).
+            </div>
 
-          <h4 className="mt-4"> Upload progress:</h4>
-          <div className="progress">
-            <div
-              className="progress-bar"
-              role="progressbar"
-             // aria-valuenow={this.state.loaded}
-              aria-valuemin={0}
-              aria-valuemax={100}
-            />
+          <h4 className="mt-4">
+              <div>
+              Visit us on&nbsp;
+                <a href="https://github.com/CIRDLES/Squid" target="_blank">
+                  Github
+                </a>
+              </div>
+          </h4>
+        </div>
+      </Box>
+              </Grid>
           </div>
-        </div>
-
-        <div className="mx-auto text-center">
-          Visit us on&nbsp;
-          <a href="https://github.com/CIRDLES/Squid" target="_blank">
-            Github
-          </a>
-        </div>
-        
-        
-        <div className="mx-auto text-center">
-          Go to&nbsp;
-          <li>
-            <Link to="/files"> files</Link>
-          </li>
-        </div>
-        
-                <div className="mx-auto text-center">
-          Go to&nbsp;
-          <li>
-            <Link to="/login"> login</Link>
-          </li>
-        </div>
       </Fragment>
     );
   }

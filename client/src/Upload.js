@@ -3,9 +3,6 @@ import { connect } from "react-redux";
 import axios from 'axios';
 import './Upload.css';
 
-
-
-
 class Upload extends Component {
   constructor(props) {
     super(props);
