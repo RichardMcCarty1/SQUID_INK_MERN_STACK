@@ -166,29 +166,22 @@ const upload = multer({ storage });
 
 const singleUpload = multer({ storage: storage }).single('file');
 
-
-// router.get('/files/:filename', (req, res) => {
-//   gfs.files.find({ filename: req.params.filename }).toArray((err, files) => {
-//     if (!files || files.length === 0) {
-//       return res.status(404).json({
-//         message: "Could not find file"
-//       });
-//     }
-//     var readstream = gfs.createReadStream({
-//       filename: files[0].filename
-//     })
-//     res.set('Content-Type', files[0].contentType);
-//     return readstream.pipe(res);
-
-//   });
-
-// });
+router.get('/files/:id', (req, res) => {
+  MongoClient.connect(dbs, function (err, client) {
+    const notAdmin = client.db("upload_db");
+    notAdmin.collection("useruploads.files").find({metadata: req.param('id')}).toArray().then(value => {
+      client.close();
+      return res.json(value)
+  });
+});
+});
 
 router.get('/files', (req, res) => {
   MongoClient.connect(dbs, function (err, client) {
     const notAdmin = client.db("upload_db");
-    notAdmin.collection("useruploads.files").find().toArray().then(value => {
+    notAdmin.collection("useruploads.files").find({metadata: userIdForFiles}).toArray().then(value => {
       client.close();
+      console.log(value)
       return res.json(value)
     });
   });
@@ -196,7 +189,6 @@ router.get('/files', (req, res) => {
 
 
 router.post('/files', singleUpload, (req, res) => {
-
   if (req.file) {
     return res.json({
       success: true,

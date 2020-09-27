@@ -1,9 +1,18 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import LinkButton from "./authActions";
+import Grid from "@material-ui/core/Grid";
+import TableContainer from "@material-ui/core/TableContainer";
+import Table from "@material-ui/core/Table";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
+import TableCell from "@material-ui/core/TableCell";
+import TableBody from "@material-ui/core/TableBody";
+import Button from "@material-ui/core/Button";
 
 
 class MyFiles extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -15,10 +24,12 @@ class MyFiles extends Component {
   componentDidMount() {
     this.loadFiles();
   }
-  loadFiles() {
-    fetch('http://localhost:5000/api/users/files/:filename')
+  loadFiles()
+  {const { user } = this.props.auth;
+    fetch(`http://localhost:5000/api/users/files/${user.id}`)
       .then(res => res.json())
       .then(files => {
+        console.log(files);
         if (files.message) {
           console.log('No Files');
           this.setState({ files: [] })
@@ -32,48 +43,44 @@ class MyFiles extends Component {
     render() {
       const { files } = this.state;
       const { user } = this.props.auth;
-  
+      console.log(files);
       return (
         <div style={{ height: "75vh" }} className="container valign-wrapper">
-          <div className="row">
-            <div className="landing-copy col s12 center-align">
-              
-            <h4>Files you've uploaded</h4>
-  
-      
-            <table className="App-table">
-            <thead>
-              <tr>
-                  <th>My files and folders</th>
-
-              </tr>
-            </thead>
-            <tbody>
-              {files.map((file, index) => {
-                var d = new Date(file.uploadDate);
-                return (
-                  <tr key={index}>
-                    <td><a href={`http://localhost:5000/api/users/files/${file.filename}`}>{file.filename}</a></td>
-                    <td><a href={`http://localhost:5000/api/users/files/${file.filename}`}>{file.filename}</a></td>
-                    <td>{`${d.toLocaleDateString()} ${d.toLocaleTimeString()}`}</td>
-                    <td>{(Math.round(file.length/100) / 10)+'KB'}</td>
-                    <td><button onClick={this.deleteFile.bind(this)} id={file._id}>Remove</button></td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-
-
- 
-
-
-
-
-  
-  
-            </div>
-          </div>
+          <Grid container
+                justify="center"
+                spacing={12}
+          >
+            <Grid item xs={12}>
+              <TableContainer>
+                <Table aria-label="simple table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="center">File Name</TableCell>
+                      <TableCell align="center">Uploaded Date</TableCell>
+                      <TableCell align="center">Size</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {files.map((file, index) => {
+                      return (
+                          <TableRow key={file.index}>
+                            <TableCell align="center">
+                              {file.filename}
+                            </TableCell>
+                            <TableCell align="center">
+                              {file.uploadDate}
+                            </TableCell>
+                            <TableCell align="center">
+                              {(Math.round(file.length/100) / 10)+'KB'}
+                            </TableCell>
+                          </TableRow>
+                      )
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
         </div>
       );
     }
